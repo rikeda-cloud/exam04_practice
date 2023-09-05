@@ -3,6 +3,7 @@
 static t_list	*get_next_cmd_line_and_dis_connect(t_list *list)
 {
 	t_list	*next_cmd_line;
+	t_list	*tmp;
 
 	if (!list->next)
 		return (NULL);
@@ -11,7 +12,9 @@ static t_list	*get_next_cmd_line_and_dis_connect(t_list *list)
 	if (!list->next)
 		return (NULL);
 	next_cmd_line = list->next->next;
-	list->next = NULL;
+	tmp = list->next;
+	tmp->next = NULL;
+	list->next = free_list(tmp);
 	return (next_cmd_line);
 }
 
@@ -25,5 +28,6 @@ void	exec_cmd_line(t_list *list)
 		list = get_next_cmd_line_and_dis_connect(list);
 		exec_cmd(cmd_line);
 		wait_cmd(cmd_line);
+		free_list(cmd_line);
 	}
 }

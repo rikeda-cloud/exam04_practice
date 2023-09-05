@@ -60,6 +60,7 @@ void		ft_putstr(const char *str);
 void		ft_putendl(const char *str);
 void		err_print(const char *str1, const char *str2);
 void		err_fatal();
+void		*free_list(t_list *list);
 
 extern char **environ;
 

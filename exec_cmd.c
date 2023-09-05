@@ -4,13 +4,14 @@ static void	try_execve(char **cmd)
 {
 	execve(cmd[0], cmd, environ);
 	err_print(ERR_EXECVE_FRONT, cmd[0]);
+	free(cmd);
 	exit(1);
 }
 
 static int	exec_normal(t_list *list, int prev_fd)
 {
 	t_word_list	*word_list = list->word_list;
-	char		**cmd = change_word_list_to_cmd(word_list);
+	char		**cmd;
 	int			pipe_fd[2];
 
 	if (pipe(pipe_fd) < 0)
@@ -19,6 +20,7 @@ static int	exec_normal(t_list *list, int prev_fd)
 		err_fatal();
 	if (list->pid == 0)
 	{
+		cmd = change_word_list_to_cmd(word_list);
 		if (prev_fd != STDIN_FILENO && (dup2(prev_fd, STDIN_FILENO) < 0 || close(prev_fd) < 0))
 			err_fatal();
 		if (close(pipe_fd[READ]) < 0)
@@ -42,12 +44,13 @@ static int	exec_normal(t_list *list, int prev_fd)
 static void	exec_last(t_list *list, int prev_fd)
 {
 	t_word_list	*word_list = list->word_list;
-	char		**cmd = change_word_list_to_cmd(word_list);
+	char		**cmd;
 
 	if ((list->pid = fork()) < 0)
 		err_fatal();
 	if (list->pid == 0)
 	{
+		cmd = change_word_list_to_cmd(word_list);
 		if (prev_fd != STDIN_FILENO && (dup2(prev_fd, STDIN_FILENO) < 0 || close(prev_fd) < 0))
 			err_fatal();
 		if (strcmp(cmd[0], "cd") == 0)
@@ -75,4 +78,3 @@ void	exec_cmd(t_list *cmd_line)
 		exec_last(cmd_line, prev_fd);
 	}
 }
-

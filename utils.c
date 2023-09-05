@@ -33,3 +33,30 @@ void	err_fatal()
 	ft_putendl(ERR_FATAL);
 	exit(1);
 }
+
+static void	*free_word_list(t_word_list *word_list)
+{
+	t_word_list	*tmp = word_list;
+
+	while (word_list)
+	{
+		word_list = word_list->next;
+		free(tmp);
+		tmp = word_list;
+	}
+	return (NULL);
+}
+
+void	*free_list(t_list *list)
+{
+	t_list	*tmp = list;
+
+	while (list)
+	{
+		list = list->next;
+		free_word_list(tmp->word_list);
+		free(tmp);
+		tmp = list;
+	}
+	return (NULL);
+}
