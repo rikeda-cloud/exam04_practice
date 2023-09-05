@@ -1,1 +1,2 @@
-# alias test="gcc *.c -o microshell ; ./microshell" + arguments
+# alias test="gcc *.c -o microshell ; ./microshell"
+# test + arguments
